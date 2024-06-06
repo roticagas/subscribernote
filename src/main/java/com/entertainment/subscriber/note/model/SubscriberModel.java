@@ -1,5 +1,6 @@
 package com.entertainment.subscriber.note.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
@@ -12,10 +13,25 @@ public class SubscriberModel {
     private String title;
     private String description;
     private String status;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime recurringAt;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifiedAt;
 
+    public SubscriberModel() {
+    }
+
+    public SubscriberModel(String name, String title, String description, String status, LocalDateTime recurringAt, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        this.name = name;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.recurringAt = recurringAt;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+    }
 
     public long getId() {
         return id;

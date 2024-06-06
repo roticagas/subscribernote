@@ -10,3 +10,13 @@ Content-Type: application/json
 GET http://localhost:8080/api/subscribers?title={{$random.alphanumeric(8)}}
 Content-Type: application/json
 
+### save
+POST http://localhost:8080/api/subscribers
+Content-Type: application/json
+
+{
+  "name":  "{{$random.alphanumeric(8)}}",
+  "title": "netflix",
+  "description":  "",
+  "status": "subscribe"
+}
