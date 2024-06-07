@@ -1,4 +1,4 @@
-package com.entertainment.subscriber.note.config;
+package com.entertainment.subscriber.note.util;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -19,7 +19,7 @@ public class AspectLogger {
      * @return The result returned by the method being intercepted.
      * @throws Throwable if an error occurs during method execution.
      */
-    @Around("@annotation(TrackTime)")
+    @Around("@annotation(com.entertainment.subscriber.note.util.TrackTime)")
     public Object trackTime(ProceedingJoinPoint joinPoint) throws Throwable {
         final long start = System.currentTimeMillis();
 

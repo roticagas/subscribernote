@@ -1,6 +1,6 @@
 package com.entertainment.subscriber.note.service;
 
-import com.entertainment.subscriber.note.config.TrackTime;
+import com.entertainment.subscriber.note.util.TrackTime;
 import com.entertainment.subscriber.note.model.SubscriberModel;
 import com.entertainment.subscriber.note.repository.SubscriberRepository;
 import org.slf4j.Logger;

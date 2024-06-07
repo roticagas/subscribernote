@@ -1,4 +1,4 @@
-package com.entertainment.subscriber.note.config;
+package com.entertainment.subscriber.note.util;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
