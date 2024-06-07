@@ -4,7 +4,7 @@
         <!-- log4j not support looking spring.application.name by default-->
         <Property name="APPLICATION_NAME">subscribernote</Property>
         <Property name="STL">{STYLE=Logback}</Property>
-        <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZZZ} %highlight{%5level}{STL} %clr{${sys:PID}}{magenta}%clr{ --- }{faint}%clr{[${APPLICATION_NAME}]}{faint}%clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan}  : %m%n%xwEx</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZZZ} %highlight{%5level}{STL} %clr{${sys:PID}}{magenta}%clr{ --- }{faint}%clr{[%X{requestId}]}{faint}%clr{[${APPLICATION_NAME}]}{faint}%clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan}  : %m%n%xwEx</Property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">

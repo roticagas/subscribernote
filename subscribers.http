@@ -13,6 +13,7 @@ Content-Type: application/json
 ### save
 POST http://localhost:8080/subscribers
 Content-Type: application/json
+X-Request-ID: {{$random.alphanumeric(25)}}
 
 {
   "name":  "{{$random.alphanumeric(8)}}",
@@ -24,6 +25,7 @@ Content-Type: application/json
 ### update
 PUT http://localhost:8080/subscribers/4
 Content-Type: application/json
+X-Request-ID: {{$random.alphanumeric(25)}}
 
 {
   "name":  "2lbu0i4U",
