@@ -4,10 +4,6 @@
         <!-- log4j not support looking spring.application.name by default-->
         <Property name="APPLICATION_NAME">subscribernote</Property>
         <Property name="STL">{STYLE=Logback}</Property>
-        <Property name="CLR">{FATAL=bright red, ERROR=red, WARN=bright yellow, INFO=Normal, DEBUG=white, TRACE=black}</Property>
-        <Property name="LOG_PATTERN0">%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} --- %msg%n</Property>
-        <Property name="LOG_PATTERN1">%d{YYYY-MM-DD'T'HH:mm:ss.SSSZ} %5level %5pid --- [aaa] [%15t] %-40.40logger{1.1.1.1.1.*} : %msg%n</Property>
-        <Property name="LOG_PATTERN2">%highlight{%d{yyyy-MM-dd'T'HH:mm:ss.SSSZZZ} %5level}${CLR} %clr{${sys:PID}}{magenta}%clr{ --- [subscribernote] }{faint}%clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan}  %highlight{: %m%n%xwEx}${CLR}</Property>
         <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZZZ} %highlight{%5level}{STL} %clr{${sys:PID}}{magenta}%clr{ --- }{faint}%clr{[${APPLICATION_NAME}]}{faint}%clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan}  : %m%n%xwEx</Property>
     </Properties>
     <Appenders>
