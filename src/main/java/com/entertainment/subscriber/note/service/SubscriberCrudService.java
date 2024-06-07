@@ -11,12 +11,12 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 
 @Service
-public class SubscriberService {
-    private final Logger logger = LoggerFactory.getLogger(SubscriberService.class);
+public class SubscriberCrudService {
+    private final Logger logger = LoggerFactory.getLogger(SubscriberCrudService.class);
 
     final SubscriberRepository subscriberRepository;
 
-    public SubscriberService(SubscriberRepository subscriberRepository) {
+    public SubscriberCrudService(SubscriberRepository subscriberRepository) {
         this.subscriberRepository = subscriberRepository;
     }
 

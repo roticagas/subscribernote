@@ -1,17 +1,17 @@
 ### findAll
-GET http://localhost:8080/api/subscribers
+GET http://localhost:8080/subscribers
 Content-Type: application/json
 
 ### findAllByName
-GET http://localhost:8080/api/subscribers?name={{$random.alphanumeric(8)}}
+GET http://localhost:8080/subscribers?name={{$random.alphanumeric(8)}}
 Content-Type: application/json
 
 ### findAllByTitile
-GET http://localhost:8080/api/subscribers?title={{$random.alphanumeric(8)}}
+GET http://localhost:8080/subscribers?title={{$random.alphanumeric(8)}}
 Content-Type: application/json
 
 ### save
-POST http://localhost:8080/api/subscribers
+POST http://localhost:8080/subscribers
 Content-Type: application/json
 
 {
@@ -19,4 +19,15 @@ Content-Type: application/json
   "title": "netflix",
   "description":  "",
   "status": "subscribe"
+}
+
+### update
+PUT http://localhost:8080/subscribers/4
+Content-Type: application/json
+
+{
+  "name":  "2lbu0i4U",
+  "title": "netflix",
+  "description":  "",
+  "status": "unsubscribe"
 }
