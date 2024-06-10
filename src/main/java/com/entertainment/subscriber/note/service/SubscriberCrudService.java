@@ -61,4 +61,9 @@ public class SubscriberCrudService {
                     return subscriberRepository.save(existingModel);
                 });
     }
+
+    @TrackTime
+    public Mono<SubscriberModel> findByNameAndTitle(SubscriberModel model) {
+        return subscriberRepository.findByNameAndTitle(model.getName(), model.getTitle());
+    }
 }
