@@ -49,6 +49,7 @@ public class SubscriberCrudService {
 
     @TrackTime
     public Mono<SubscriberModel> update(long id, SubscriberModel model) {
+        logger.debug("update %d, %s".formatted(id, model));
         return subscriberRepository.findById(id)
                 .flatMap(existingModel -> {
                     existingModel.setName(model.getName());
