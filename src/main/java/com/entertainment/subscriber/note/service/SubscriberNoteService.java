@@ -24,28 +24,6 @@ public class SubscriberNoteService {
         this.subscriberCrudService = subscriberCrudService;
     }
 
-
-    public Mono<SubscriberModel> update0(SubscriberDao subscriberDao) {
-        SubscriberModel request = SubscriberConverter.convertToSubscriberModel(subscriberDao);
-        String description = "%s:-".formatted(request.getTitle());
-
-        ConfigModel config = configCrudService.findByConfigKey(request.getTitle() + ".price").block();
-        if (config != null) {
-            description = "%s:%s".formatted(request.getTitle(), config.getConfigValue());
-        }
-
-        SubscriberModel existed = subscriberCrudService.findByNameAndTitle(request).block();
-        if (existed == null) {
-            request.setDescription(description);
-            request.setModifiedAt(LocalDateTime.now());
-            return subscriberCrudService.save(request);
-        } else {
-            existed.setDescription(description);
-            existed.setModifiedAt(LocalDateTime.now());
-            return subscriberCrudService.update(existed.getId(), existed);
-        }
-    }
-
     public Mono<SubscriberModel> update(SubscriberDao subscriberDao) {
         SubscriberModel request = SubscriberConverter.convertToSubscriberModel(subscriberDao);
         logger.debug("request: {}", request);
