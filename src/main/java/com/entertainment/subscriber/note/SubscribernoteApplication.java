@@ -2,8 +2,10 @@ package com.entertainment.subscriber.note;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.web.reactive.config.EnableWebFlux;
 
+@EnableCaching
 @EnableWebFlux
 @SpringBootApplication
 public class SubscribernoteApplication {
