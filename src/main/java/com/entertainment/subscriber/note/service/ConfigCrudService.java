@@ -1,5 +1,6 @@
 package com.entertainment.subscriber.note.service;
 
+import com.entertainment.subscriber.note.config.CacheConfig;
 import com.entertainment.subscriber.note.model.ConfigModel;
 import com.entertainment.subscriber.note.repository.ConfigRepository;
 import org.slf4j.Logger;
@@ -27,14 +28,12 @@ public class ConfigCrudService {
         return configRepository.findAll();
     }
 
-    @CacheEvict(value = "config", key = "#configModel.configKey")
     public Mono<ConfigModel> save(ConfigModel configModel) {
         ConfigModel entity = new ConfigModel(configModel.getConfigKey(), configModel.getConfigValue(), LocalDateTime.now(), LocalDateTime.now());
         logger.debug("save %s".formatted(entity));
         return configRepository.save(entity);
     }
 
-    @CacheEvict(value = "config", key = "#configModel.configKey")
     public Mono<ConfigModel> update(ConfigModel configModel) {
         logger.debug("update %s".formatted(configModel));
         return configRepository.findByConfigKey(configModel.getConfigKey())
@@ -47,14 +46,13 @@ public class ConfigCrudService {
                 ).switchIfEmpty(save(configModel));
     }
 
-    @CacheEvict(value = "config", key = "#key")
     public Mono<Void> deleteByConfigKey(String key) {
         logger.debug("deleteByConfigKey %s".formatted(key));
         configRepository.deleteByConfigKey(key);
         return Mono.empty();
     }
 
-    @Cacheable(value = "config", key = "#key")
+    @Cacheable(value = CacheConfig.CACHE_NAME, key = "#key")
     public Mono<ConfigModel> findByConfigKey(String key) {
         logger.debug("findByConfigKey %s".formatted(key));
         return configRepository.findByConfigKey(key);
