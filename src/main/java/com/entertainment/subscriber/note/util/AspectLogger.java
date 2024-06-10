@@ -6,6 +6,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Aspect
 @Component
@@ -25,10 +27,19 @@ public class AspectLogger {
 
         final Object proceed = joinPoint.proceed();
 
-        final long executionTime = System.currentTimeMillis() - start;
-
-        logger.info("{} executed in {} ms", joinPoint.getSignature().toShortString(), executionTime);
-
+        if (proceed instanceof Mono) {
+            return ((Mono<?>) proceed).doOnSuccess(o -> {
+                logger.info("{} executed Mono in {} ms", joinPoint.getSignature().toShortString(), System.currentTimeMillis() - start);
+            });
+        } else if (proceed instanceof Flux) {
+            return ((Flux<?>) proceed).doOnComplete(() -> {
+                logger.info("{} executed Flux in {} ms", joinPoint.getSignature().toShortString(), System.currentTimeMillis() - start);
+            });
+        } else if (proceed instanceof Throwable) {
+            logger.info("{} executed Throwable in {} ms", joinPoint.getSignature().toShortString(), System.currentTimeMillis() - start);
+        } else {
+            logger.info("{} executed in {} ms", joinPoint.getSignature().toShortString(), System.currentTimeMillis() - start);
+        }
         return proceed;
     }
 }

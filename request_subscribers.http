@@ -22,14 +22,27 @@ X-Request-ID: {{$random.alphanumeric(25)}}
   "status": "subscribe"
 }
 
-### update
+### update for note
 PUT http://localhost:8080/subscribers/4
 Content-Type: application/json
 X-Request-ID: {{$random.alphanumeric(25)}}
 
 {
-  "name":  "2lbu0i4U",
+  "name":  "abcdefg",
   "title": "netflix",
   "description":  "",
   "status": "unsubscribe"
 }
+
+### save for note
+POST http://localhost:8080/subscribers
+Content-Type: application/json
+X-Request-ID: {{$random.alphanumeric(25)}}
+
+{
+  "name":  "abcdefg",
+  "title": "netflix",
+  "description":  "",
+  "status": "subscribe"
+}
+

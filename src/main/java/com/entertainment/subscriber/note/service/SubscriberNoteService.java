@@ -4,6 +4,7 @@ import com.entertainment.subscriber.note.dao.SubscriberDao;
 import com.entertainment.subscriber.note.model.ConfigModel;
 import com.entertainment.subscriber.note.model.SubscriberModel;
 import com.entertainment.subscriber.note.util.SubscriberConverter;
+import com.entertainment.subscriber.note.util.TrackTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class SubscriberNoteService {
         this.subscriberCrudService = subscriberCrudService;
     }
 
+    @TrackTime
     public Mono<SubscriberModel> update(SubscriberDao subscriberDao) {
         SubscriberModel request = SubscriberConverter.convertToSubscriberModel(subscriberDao);
         logger.debug("request: {}", request);
