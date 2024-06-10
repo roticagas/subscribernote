@@ -1,0 +1,21 @@
+### notes , change name and status due to testcase
+POST http://localhost:8080/notes
+Content-Type: application/json
+
+
+{
+  "name": "cL0fdqA2",
+  "title":  "netflix",
+  "status": "unsubscribe"
+}
+
+### notes randomly
+POST http://localhost:8080/notes
+Content-Type: application/json
+
+
+{
+  "name": "{{$random.alphanumeric(8)}}",
+  "title":  "netflix",
+  "status": "subscribe"
+}
