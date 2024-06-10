@@ -24,21 +24,21 @@ public class AspectLogger {
     @Around("@annotation(com.entertainment.subscriber.note.util.TrackTime)")
     public Object trackTime(ProceedingJoinPoint joinPoint) throws Throwable {
         final long start = System.currentTimeMillis();
-
+        final String signature = joinPoint.getSignature().toShortString();
         final Object proceed = joinPoint.proceed();
-
-        if (proceed instanceof Mono) {
-            return ((Mono<?>) proceed).doOnSuccess(o -> {
-                logger.info("{} executed Mono in {} ms", joinPoint.getSignature().toShortString(), System.currentTimeMillis() - start);
-            });
-        } else if (proceed instanceof Flux) {
-            return ((Flux<?>) proceed).doOnComplete(() -> {
-                logger.info("{} executed Flux in {} ms", joinPoint.getSignature().toShortString(), System.currentTimeMillis() - start);
-            });
-        } else if (proceed instanceof Throwable) {
-            logger.info("{} executed Throwable in {} ms", joinPoint.getSignature().toShortString(), System.currentTimeMillis() - start);
-        } else {
-            logger.info("{} executed in {} ms", joinPoint.getSignature().toShortString(), System.currentTimeMillis() - start);
+        switch (proceed) {
+            case Mono<?> mono -> {
+                return mono.doOnSuccess(o -> logger.info("{} executed Mono in {} ms", signature, System.currentTimeMillis() - start));
+            }
+            case Flux<?> flux -> {
+                return flux.doOnComplete(() -> logger.info("{} executed Flux in {} ms", signature, System.currentTimeMillis() - start));
+            }
+            case Throwable throwable -> {
+                logger.info("{} executed Throwable in {} ms", signature, System.currentTimeMillis() - start);
+            }
+            case null, default -> {
+                logger.info("{} executed in {} ms", signature, System.currentTimeMillis() - start);
+            }
         }
         return proceed;
     }

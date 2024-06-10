@@ -18,15 +18,13 @@ public class TransactionLogger {
     public void subscriberNoteControllerUpdate() {}
 
     @Around("subscriberNoteControllerUpdate()")
-    public Object logAroundUpdate(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object subscriberNoteControllerUpdateLog(ProceedingJoinPoint joinPoint) throws Throwable {
         final long start = System.currentTimeMillis();
         try {
-            Object proceed = joinPoint.proceed(); // Continue on the intercepted method
-            return ((Mono<?>) proceed).doOnSuccess(o -> {
-                logger.info("0||{}", System.currentTimeMillis() - start);
-            });
+            Object proceed = joinPoint.proceed();
+            return ((Mono<?>) proceed).doOnSuccess(o -> logger.info("0||{}", System.currentTimeMillis() - start));
         } catch (Throwable throwable) {
-            logger.error("-1|{}|{}", throwable.getMessage(), System.currentTimeMillis() - start);
+            logger.info("-1|{}|{}", throwable.getMessage(), System.currentTimeMillis() - start);
             throw throwable;
         }
     }
