@@ -1,0 +1,36 @@
+### findAll
+GET http://localhost:8080/configs
+Content-Type: application/json
+
+### save random
+POST http://localhost:8080/configs
+Content-Type: application/json
+
+
+{
+  "configKey":  "{{$random.alphanumeric(8)}}",
+  "configValue": "{{$random.alphanumeric(8)}}"
+}
+
+### save
+POST http://localhost:8080/configs
+Content-Type: application/json
+
+
+{
+  "configKey":  "netflix.price",
+  "configValue": "419"
+}
+
+### update
+PUT http://localhost:8080/configs
+Content-Type: application/json
+
+
+{
+  "configKey":  "netflix.price",
+  "configValue": "399"
+}
+
+### GET key
+GET http://localhost:8080/configs/netflix.price
