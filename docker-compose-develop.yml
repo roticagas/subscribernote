@@ -1,0 +1,13 @@
+version: "3"
+services:
+  db:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: subscriberowner
+      POSTGRES_PASSWORD: subscriberpassword
+      POSTGRES_DB: subscriberdb
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"

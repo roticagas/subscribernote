@@ -1,5 +1,5 @@
 ### notes , change name and status due to testcase
-POST http://localhost:8080/notes
+POST {{host}}/notes
 Content-Type: application/json
 
 
@@ -10,7 +10,7 @@ Content-Type: application/json
 }
 
 ### notes randomly
-POST http://localhost:8080/notes
+POST {{host}}/notes
 Content-Type: application/json
 
 

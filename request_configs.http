@@ -1,9 +1,9 @@
 ### findAll
-GET http://localhost:8080/configs
+GET {{host}}/configs
 Content-Type: application/json
 
 ### save random
-POST http://localhost:8080/configs
+POST {{host}}/configs
 Content-Type: application/json
 
 
@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ### save
-POST http://localhost:8080/configs
+POST {{host}}/configs
 Content-Type: application/json
 
 
@@ -23,7 +23,7 @@ Content-Type: application/json
 }
 
 ### update
-PUT http://localhost:8080/configs
+PUT {{host}}/configs
 Content-Type: application/json
 
 
@@ -33,4 +33,4 @@ Content-Type: application/json
 }
 
 ### GET key
-GET http://localhost:8080/configs/netflix.price
+GET {{host}}/configs/netflix.price

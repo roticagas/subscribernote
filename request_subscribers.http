@@ -1,17 +1,17 @@
 ### findAll
-GET http://localhost:8080/subscribers
+GET {{host}}/subscribers
 Content-Type: application/json
 
 ### findAllByName
-GET http://localhost:8080/subscribers?name={{$random.alphanumeric(8)}}
+GET {{host}}/subscribers?name={{$random.alphanumeric(8)}}
 Content-Type: application/json
 
 ### findAllByTitile
-GET http://localhost:8080/subscribers?title={{$random.alphanumeric(8)}}
+GET {{host}}/subscribers?title={{$random.alphanumeric(8)}}
 Content-Type: application/json
 
 ### save
-POST http://localhost:8080/subscribers
+POST {{host}}/subscribers
 Content-Type: application/json
 X-Request-ID: {{$random.alphanumeric(25)}}
 
@@ -23,7 +23,7 @@ X-Request-ID: {{$random.alphanumeric(25)}}
 }
 
 ### update for note
-PUT http://localhost:8080/subscribers/4
+PUT {{host}}/subscribers/4
 Content-Type: application/json
 X-Request-ID: {{$random.alphanumeric(25)}}
 
@@ -35,7 +35,7 @@ X-Request-ID: {{$random.alphanumeric(25)}}
 }
 
 ### save for note
-POST http://localhost:8080/subscribers
+POST {{host}}/subscribers
 Content-Type: application/json
 X-Request-ID: {{$random.alphanumeric(25)}}
 
