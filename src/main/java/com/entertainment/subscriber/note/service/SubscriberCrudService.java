@@ -5,6 +5,7 @@ import com.entertainment.subscriber.note.model.SubscriberModel;
 import com.entertainment.subscriber.note.repository.SubscriberRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,26 +23,25 @@ public class SubscriberCrudService {
     }
 
     @TrackTime
-    public Flux<SubscriberModel> findAll() {
-        logger.debug("findAll");
-        return subscriberRepository.findAll();
+    public Flux<SubscriberModel> findAllBy(PageRequest pageRequest) {
+        logger.debug("findAll %s".formatted(pageRequest));
+        return subscriberRepository.findAllBy(pageRequest);
     }
 
     @TrackTime
-    public Flux<SubscriberModel> findAllByName(String name) {
-        logger.debug("findAllByName %s".formatted(name));
-        return subscriberRepository.findAllByName(name);
+    public Flux<SubscriberModel> findAllByName(String name, PageRequest pageRequest) {
+        logger.debug("findAllByName %s %s".formatted(name, pageRequest));
+        return subscriberRepository.findAllByName(name, pageRequest);
     }
 
     @TrackTime
-    public Flux<SubscriberModel> findAllByTitle(String title) {
-        logger.debug("findAllByTitle %s".formatted(title));
-        return subscriberRepository.findAllByTitle(title);
+    public Flux<SubscriberModel> findAllByTitle(String title, PageRequest pageRequest) {
+        logger.debug("findAllByTitle %s %s".formatted(title, pageRequest));
+        return subscriberRepository.findAllByTitle(title, pageRequest);
     }
 
     @TrackTime
     public Mono<SubscriberModel> save(SubscriberModel model) {
-
         SubscriberModel entity = new SubscriberModel(model.getName(), model.getTitle(), model.getDescription(), model.getStatus(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now());
         logger.debug("save %s".formatted(entity));
         return subscriberRepository.save(entity);
