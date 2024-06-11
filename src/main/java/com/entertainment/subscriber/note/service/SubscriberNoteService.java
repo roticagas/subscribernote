@@ -31,12 +31,14 @@ public class SubscriberNoteService {
         SubscriberModel request = SubscriberConverter.convertToSubscriberModel(subscriberDao);
         logger.debug("request: {}", request);
         String requestId = ThreadContext.get("requestId");
-        return configCrudService.findByConfigKey(request.getTitle() + ".price")
-                        .flatMap(config -> {
-                            ThreadContext.put("requestId", requestId);
-                            logger.debug("found config: {}", config);
-                            return updateOrCreateSubscriber(config, request);
-                        }).doOnTerminate(ThreadContext::clearMap);
+        return configCrudService
+                .findByConfigKey(request.getTitle() + ".price")
+                .doOnEach(sig -> ThreadContext.put("requestId", requestId))
+                .flatMap(config -> {
+                    logger.debug("found config: {}", config);
+                    return updateOrCreateSubscriber(config, request);
+                })
+                .doOnTerminate(ThreadContext::clearMap);
 
     }
 
@@ -46,9 +48,10 @@ public class SubscriberNoteService {
                 String.format("%s:-", request.getTitle());
         request.setDescription(description);
         String requestId = ThreadContext.get("requestId");
-        return subscriberCrudService.findByNameAndTitle(request)
+        return subscriberCrudService
+                .findByNameAndTitle(request)
+                .doOnEach(sig -> ThreadContext.put("requestId", requestId))
                 .flatMap(existingSubscriber -> {
-                    ThreadContext.put("requestId", requestId);
                     existingSubscriber.setDescription(description);
                     existingSubscriber.setStatus(request.getStatus());
                     existingSubscriber.setModifiedAt(LocalDateTime.now());
