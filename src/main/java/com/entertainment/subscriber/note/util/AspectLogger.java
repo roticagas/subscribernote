@@ -1,5 +1,6 @@
 package com.entertainment.subscriber.note.util;
 
+import org.apache.logging.log4j.ThreadContext;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -24,22 +25,23 @@ public class AspectLogger {
     @Around("@annotation(com.entertainment.subscriber.note.util.TrackTime)")
     public Object trackTime(ProceedingJoinPoint joinPoint) throws Throwable {
         final long start = System.currentTimeMillis();
-        final String signature = joinPoint.getSignature().toShortString();
-        final Object proceed = joinPoint.proceed();
+        Object proceed = joinPoint.proceed();
+        final String requestId = ThreadContext.get("requestId");
         switch (proceed) {
             case Mono<?> mono -> {
-                return mono.doOnSuccess(o -> logger.info("{} executed Mono in {} ms", signature, System.currentTimeMillis() - start));
+                return mono.doOnSuccess(o -> trackTimeLog(joinPoint, requestId, start));
             }
             case Flux<?> flux -> {
-                return flux.doOnComplete(() -> logger.info("{} executed Flux in {} ms", signature, System.currentTimeMillis() - start));
+                return flux.doOnComplete(() -> trackTimeLog(joinPoint, requestId, start));
             }
-            case Throwable throwable -> {
-                logger.info("{} executed Throwable in {} ms", signature, System.currentTimeMillis() - start);
-            }
-            case null, default -> {
-                logger.info("{} executed in {} ms", signature, System.currentTimeMillis() - start);
-            }
+            case null, default -> trackTimeLog(joinPoint, requestId, start);
         }
         return proceed;
+    }
+
+    private void trackTimeLog(ProceedingJoinPoint joinPoint, String requestId, long start) {
+        ThreadContext.put("requestId", requestId);
+        logger.info("{} executed in {} ms", joinPoint.getSignature().toShortString(), System.currentTimeMillis() - start);
+        ThreadContext.clearMap();
     }
 }

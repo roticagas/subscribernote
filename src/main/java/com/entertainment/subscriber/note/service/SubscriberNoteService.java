@@ -5,6 +5,7 @@ import com.entertainment.subscriber.note.model.ConfigModel;
 import com.entertainment.subscriber.note.model.SubscriberModel;
 import com.entertainment.subscriber.note.util.SubscriberConverter;
 import com.entertainment.subscriber.note.util.TrackTime;
+import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -29,9 +30,14 @@ public class SubscriberNoteService {
     public Mono<SubscriberModel> update(SubscriberDao subscriberDao) {
         SubscriberModel request = SubscriberConverter.convertToSubscriberModel(subscriberDao);
         logger.debug("request: {}", request);
+        String requestId = ThreadContext.get("requestId");
         return configCrudService.findByConfigKey(request.getTitle() + ".price")
-                .flatMap(config -> updateOrCreateSubscriber(config, request)
-                );
+                        .flatMap(config -> {
+                            ThreadContext.put("requestId", requestId);
+                            logger.debug("found config: {}", config);
+                            return updateOrCreateSubscriber(config, request);
+                        }).doOnTerminate(ThreadContext::clearMap);
+
     }
 
     private Mono<SubscriberModel> updateOrCreateSubscriber(ConfigModel config, SubscriberModel request) {
@@ -39,14 +45,20 @@ public class SubscriberNoteService {
                 String.format("%s:%s", request.getTitle(), config.getConfigValue()) :
                 String.format("%s:-", request.getTitle());
         request.setDescription(description);
-
+        String requestId = ThreadContext.get("requestId");
         return subscriberCrudService.findByNameAndTitle(request)
                 .flatMap(existingSubscriber -> {
+                    ThreadContext.put("requestId", requestId);
                     existingSubscriber.setDescription(description);
                     existingSubscriber.setStatus(request.getStatus());
                     existingSubscriber.setModifiedAt(LocalDateTime.now());
+                    logger.debug("update subscriber: {}", existingSubscriber);
                     return subscriberCrudService.update(existingSubscriber.getId(), existingSubscriber);
                 })
-                .switchIfEmpty(Mono.defer(() -> subscriberCrudService.save(request)));
+                .switchIfEmpty(Mono.defer(() -> {
+                    logger.debug("save subscriber: {}", request);
+                    return subscriberCrudService.save(request);
+                }))
+                .doOnTerminate(ThreadContext::clearMap);
     }
 }

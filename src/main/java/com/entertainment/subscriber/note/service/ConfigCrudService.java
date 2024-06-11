@@ -3,9 +3,9 @@ package com.entertainment.subscriber.note.service;
 import com.entertainment.subscriber.note.config.CacheConfig;
 import com.entertainment.subscriber.note.model.ConfigModel;
 import com.entertainment.subscriber.note.repository.ConfigRepository;
+import com.entertainment.subscriber.note.util.TrackTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -52,6 +52,7 @@ public class ConfigCrudService {
         return Mono.empty();
     }
 
+    @TrackTime
     @Cacheable(value = CacheConfig.CACHE_NAME, key = "#key")
     public Mono<ConfigModel> findByConfigKey(String key) {
         logger.debug("findByConfigKey %s".formatted(key));
