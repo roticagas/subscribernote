@@ -5,9 +5,9 @@ import com.entertainment.subscriber.note.model.ConfigModel;
 import com.entertainment.subscriber.note.model.SubscriberModel;
 import com.entertainment.subscriber.note.util.SubscriberConverter;
 import com.entertainment.subscriber.note.util.TrackTime;
-import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -30,15 +30,15 @@ public class SubscriberNoteService {
     public Mono<SubscriberModel> update(SubscriberDao subscriberDao) {
         SubscriberModel request = SubscriberConverter.convertToSubscriberModel(subscriberDao);
         logger.debug("request: {}", request);
-        String requestId = ThreadContext.get("requestId");
+        String requestId = MDC.get("requestId");
         return configCrudService
                 .findByConfigKey(request.getTitle() + ".price")
-                .doOnEach(sig -> ThreadContext.put("requestId", requestId))
+                .doOnEach(sig -> MDC.put("requestId", requestId))
                 .flatMap(config -> {
                     logger.debug("found config: {}", config);
                     return updateOrCreateSubscriber(config, request);
                 })
-                .doOnTerminate(ThreadContext::clearMap);
+                .doOnTerminate(MDC::clear);
 
     }
 
@@ -47,10 +47,10 @@ public class SubscriberNoteService {
                 String.format("%s:%s", request.getTitle(), config.getConfigValue()) :
                 String.format("%s:-", request.getTitle());
         request.setDescription(description);
-        String requestId = ThreadContext.get("requestId");
+        String requestId = MDC.get("requestId");
         return subscriberCrudService
                 .findByNameAndTitle(request)
-                .doOnEach(sig -> ThreadContext.put("requestId", requestId))
+                .doOnEach(sig -> MDC.put("requestId", requestId))
                 .flatMap(existingSubscriber -> {
                     existingSubscriber.setDescription(description);
                     existingSubscriber.setStatus(request.getStatus());
@@ -62,6 +62,6 @@ public class SubscriberNoteService {
                     logger.debug("save subscriber: {}", request);
                     return subscriberCrudService.save(request);
                 }))
-                .doOnTerminate(ThreadContext::clearMap);
+                .doOnTerminate(MDC::clear);
     }
 }

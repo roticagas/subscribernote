@@ -1,11 +1,11 @@
 package com.entertainment.subscriber.note.util;
 
-import org.apache.logging.log4j.ThreadContext;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -26,7 +26,7 @@ public class AspectLogger {
     public Object trackTime(ProceedingJoinPoint joinPoint) throws Throwable {
         final long start = System.currentTimeMillis();
         Object proceed = joinPoint.proceed();
-        final String requestId = ThreadContext.get("requestId");
+        final String requestId = MDC.get("requestId");
         switch (proceed) {
             case Mono<?> mono -> {
                 return mono.doOnSuccess(o -> trackTimeLog(joinPoint, requestId, start));
@@ -40,8 +40,8 @@ public class AspectLogger {
     }
 
     private void trackTimeLog(ProceedingJoinPoint joinPoint, String requestId, long start) {
-        ThreadContext.put("requestId", requestId);
+        MDC.put("requestId", requestId);
         logger.info("{} executed in {} ms", joinPoint.getSignature().toShortString(), System.currentTimeMillis() - start);
-        ThreadContext.clearMap();
+        MDC.clear();
     }
 }

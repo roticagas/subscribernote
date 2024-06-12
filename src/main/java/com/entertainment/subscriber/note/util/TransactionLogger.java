@@ -1,12 +1,12 @@
 package com.entertainment.subscriber.note.util;
 
-import org.apache.logging.log4j.ThreadContext;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,7 +23,7 @@ public class TransactionLogger {
     public Object subscriberNoteControllerUpdateLog(ProceedingJoinPoint joinPoint) throws Throwable {
         final long start = System.currentTimeMillis();
         Object proceed = joinPoint.proceed();
-        final String requestId = ThreadContext.get("requestId");
+        final String requestId = MDC.get("requestId");
         switch (proceed) {
             case Mono<?> mono -> {
                 return mono.doOnSuccess(o -> handleLogging("0", "", requestId, start));
@@ -38,8 +38,8 @@ public class TransactionLogger {
     }
 
     private void handleLogging(String status, String status2, String requestId, long start) {
-        ThreadContext.put("requestId", requestId);
+        MDC.put("requestId", requestId);
         logger.info("{}|{}|{}", status, status2, System.currentTimeMillis() - start);
-        ThreadContext.clearMap();
+        MDC.clear();
     }
 }

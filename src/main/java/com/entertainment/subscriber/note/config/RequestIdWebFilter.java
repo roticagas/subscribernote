@@ -1,6 +1,6 @@
 package com.entertainment.subscriber.note.config;
 
-import org.apache.logging.log4j.ThreadContext;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -19,7 +19,7 @@ import java.util.UUID;
  * in the application for logging or any other purpose.
  */
 @Component
-public class ThreadContextWebFilter implements WebFilter {
+public class RequestIdWebFilter implements WebFilter {
 
     private static String convertUUIDToBase64(UUID uuid) {
         // Write the UUID to a ByteBuffer
@@ -28,7 +28,7 @@ public class ThreadContextWebFilter implements WebFilter {
         buffer.putLong(uuid.getLeastSignificantBits());
 
         // Convert to base64 and return
-        return Base64.getUrlEncoder().withoutPadding().encodeToString(buffer.array());
+        return (Base64.getUrlEncoder().withoutPadding().encodeToString(buffer.array()) + "XYZ").substring(0, 25);
     }
 
     /**
@@ -42,8 +42,8 @@ public class ThreadContextWebFilter implements WebFilter {
         if (requestId == null || requestId.isEmpty()) {
             requestId = convertUUIDToBase64(UUID.randomUUID());
         }
-        ThreadContext.put("requestId", requestId);
+        MDC.put("requestId", requestId);
         return chain.filter(exchange)
-                .doOnTerminate(ThreadContext::clearMap);
+                .doOnTerminate(MDC::clear);
     }
 }
